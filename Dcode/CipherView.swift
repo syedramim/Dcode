@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct CipherView: View {
     @State private var enrypt: String = ""
     @State private var decrypt: String = ""
     @State private var stateCipher: Bool = false
@@ -39,5 +39,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    CipherView()
 }
