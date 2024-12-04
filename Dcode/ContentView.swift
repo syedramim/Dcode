@@ -8,12 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var enrypt: String = ""
+    @State private var decrypt: String = ""
+    @State private var stateCipher: Bool = false
+    
+    private var stateCipherText: String {
+         stateCipher ? "Encrypt" : "Decrypt"
+    }
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            TextField("Encrypt:", text: $enrypt)
+            
+            Spacer()
+            
+            TextField("Decrypt:", text: $decrypt)
+            
+            Spacer()
+            
+            Button {
+                stateCipher.toggle()
+            } label: {
+                Text(stateCipherText)
+            }
+            .buttonStyle(.borderedProminent)
+
         }
         .padding()
     }
