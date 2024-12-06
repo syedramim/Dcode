@@ -11,6 +11,7 @@ struct CipherView: View {
     @State private var enrypt: String = ""
     @State private var decrypt: String = ""
     @State private var stateCipher: Bool = false
+    @StateObject private var cipherVM = CipherViewModel()
     
     private var stateCipherText: String {
          stateCipher ? "Encrypt" : "Decrypt"
@@ -32,6 +33,10 @@ struct CipherView: View {
                 Text(stateCipherText)
             }
             .buttonStyle(.borderedProminent)
+            
+            Spacer()
+            
+            Text("\(cipherVM.CaesarCipher(str: "CAT", isEncrypt: true, shift: 3))")
 
         }
         .padding()
