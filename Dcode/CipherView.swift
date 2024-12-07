@@ -36,7 +36,7 @@ struct CipherView: View {
             
             Spacer()
             
-            Text("\(cipherVM.CaesarCipher(str: "CAT", isEncrypt: true, shift: 3))")
+            Text(cipherVM.ROT13Cipher(str: "Hello"))
 
         }
         .padding()

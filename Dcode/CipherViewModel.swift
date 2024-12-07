@@ -14,6 +14,7 @@ class CipherViewModel: ObservableObject {
         if let asciiVal = char.asciiValue {
             return Int(asciiVal)
         }
+        
         return -1
     }
     
@@ -22,12 +23,14 @@ class CipherViewModel: ObservableObject {
         if let uniASCII = UnicodeScalar(asciiVal) {
             return String(Character(uniASCII))
         }
+        
         return nil
     }
     
     // function isLetter takes a character as input and returns a Bool depending on if the character provided has an ASCII value which links to a letter in the alphabet
     private func isLetter(_ char: Character) -> Bool {
         let val = self.getASCIIVal(char)
+        
         return (65 <= val && val <= 90) || (97 <= val && val <= 122)
     }
     
@@ -44,8 +47,8 @@ class CipherViewModel: ObservableObject {
                 // calculates the new position of the letter depending on its ASCII value which is then just brought to normal alphabet positions ranging from 0-25 and then gives its new position according to the shift
                 let charChangedPosition = (((ascii - mainStart + shiftFactor) % 26 + 26) % 26) + mainStart
                 
-                if let appString = self.getStringFromASCII(charChangedPosition) {
-                    stringResult += appString
+                if let appendToString = self.getStringFromASCII(charChangedPosition) {
+                    stringResult += appendToString
                 } else {
                     continue
                 }
@@ -53,18 +56,27 @@ class CipherViewModel: ObservableObject {
                 stringResult.append(s)
             }
         }
+        
         return stringResult
     }
     
+    // func AtbashCipher takes a String as input and returns another string, since it is 1:1, encoding or decoding is irrelevent. Atbash Cipher maps each char to it's inverse indexed char. Ex. A->Z and Z->A
     func AtbashCipher(str: String) -> String {
         var stringResult = ""
         
         for s in str {
             if self.isLetter(s) {
                 let mainStart = s.isUppercase ? 65 : 97
-                let 
+                let ascii = self.getASCIIVal(s)
                 
+                // the new positions takes the current position in the alphabet then switches the position by doing 25 - pos and then giving it the ascii value by adding mainstart to it
+                let charChangedPosition = (25 - (ascii - mainStart)) + mainStart
                 
+                if let appendToString = self.getStringFromASCII(charChangedPosition) {
+                    stringResult += appendToString
+                } else {
+                    continue
+                }
             } else {
                 stringResult.append(s)
             }
@@ -72,4 +84,21 @@ class CipherViewModel: ObservableObject {
         
         return stringResult
     }
+    
+    func ROT13Cipher(str: String) -> String {
+        return self.CaesarCipher(str: str, isEncrypt: true, shift: 13)
+    }
+    
+    //TODO: implement vigCipher
+    func VigenereCipher(str: String, key: String) -> String {
+        var stringResult = ""
+        let keyMatchedStringLength =
+        for s in str {
+            
+        }
+        
+        return stringResult
+    }
+    
+    //TODO: implement morse code, xor, and encode64
 }
