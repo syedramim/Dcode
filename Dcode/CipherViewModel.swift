@@ -34,6 +34,10 @@ class CipherViewModel: ObservableObject {
         return (65 <= val && val <= 90) || (97 <= val && val <= 122)
     }
     
+    private func determineLowerOrUpper(_ char: Character) -> Int {
+        return char.isUppercase ? 65 : 97
+    }
+    
     // function CaeserCipher takes a String, a Bool, an Int and returns a String with either an encoded version or decoded depending on the Bool, the String that is input is either encoded or decoded and it is either encoded or decoded depending on the shift which is the input Int
     func CaesarCipher(str: String, isEncrypt: Bool, shift: Int) -> String {
         var stringResult = ""
@@ -41,7 +45,7 @@ class CipherViewModel: ObservableObject {
         for s in str {
             if self.isLetter(s) {
                 let ascii = self.getASCIIVal(s)
-                let mainStart = s.isUppercase ? 65 : 97
+                let mainStart = self.determineLowerOrUpper(s)
                 let shiftFactor = isEncrypt ? shift: -shift
                 
                 // calculates the new position of the letter depending on its ASCII value which is then just brought to normal alphabet positions ranging from 0-25 and then gives its new position according to the shift
@@ -66,7 +70,7 @@ class CipherViewModel: ObservableObject {
         
         for s in str {
             if self.isLetter(s) {
-                let mainStart = s.isUppercase ? 65 : 97
+                let mainStart = self.determineLowerOrUpper(s)
                 let ascii = self.getASCIIVal(s)
                 
                 // the new positions takes the current position in the alphabet then switches the position by doing 25 - pos and then giving it the ascii value by adding mainstart to it
@@ -89,15 +93,35 @@ class CipherViewModel: ObservableObject {
         return self.CaesarCipher(str: str, isEncrypt: true, shift: 13)
     }
     
-    //TODO: implement vigCipher
-    func VigenereCipher(str: String, key: String) -> String {
+    func VigenereCipher(str: String, isEncrypt: Bool, key: String) -> String {
         var stringResult = ""
-        let keyMatchedStringLength =
+        let keyLength = key.count
+        var key_index = 0
+        
         for s in str {
+            if self.isLetter(s) {
+                let strStart = self.determineLowerOrUpper(s)
+                let strASCII = self.getASCIIVal(s)
+                let key_char = key[key.index(key.startIndex, offsetBy: key_index)]
+                let keyStart = self.determineLowerOrUpper(key_char)
+                let keyASCII = self.getASCIIVal(key_char)
+                let keyNormalizedPos = keyASCII - keyStart
+                
+                let charChangedPosition = (((strASCII - strStart) + (isEncrypt ? keyNormalizedPos : -keyNormalizedPos) + 26) % 26) + strStart
             
+                if let appendToString = self.getStringFromASCII(charChangedPosition) {
+                    stringResult.append(appendToString)
+                } else {
+                    continue
+                }
+                
+                key_index = (key_index + 1) % keyLength
+            } else {
+                stringResult.append(s)
+            }
         }
         
-        return stringResult
+        return "The String: " + stringResult
     }
     
     //TODO: implement morse code, xor, and encode64
