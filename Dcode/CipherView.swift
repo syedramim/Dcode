@@ -10,7 +10,7 @@ import SwiftUI
 struct CipherView: View {
     @State private var enrypt: String = ""
     @State private var decrypt: String = ""
-    @State private var stateCipher: Bool = false
+    @State private var stateCipher: Bool = true
     @StateObject private var cipherVM = CipherViewModel()
     
     private var stateCipherText: String {
@@ -19,24 +19,35 @@ struct CipherView: View {
     
     var body: some View {
         VStack {
-            TextField("Encrypt:", text: $enrypt)
-            
             Spacer()
             
-            TextField("Decrypt:", text: $decrypt)
+            Group {
+                TextField(stateCipher ? "Encrypt: " : "Decrypt: ", text: $enrypt)
+                Divider()
+                    .frame(minHeight: 5)
+                    .background(Color.gray)
+            }
+            .frame(width: 350)
+            .padding(2)
             
             Spacer()
-            
+            /*
             Button {
                 stateCipher.toggle()
             } label: {
-                Text(stateCipherText)
-            }
-            .buttonStyle(.borderedProminent)
+                Image(systemName: stateCipher ? "lock.open" : "lock")
+                    .resizable()
+                    .frame(width: 75, height: 100)
+                    .tint(.black)
+            }*/
+
             
             Spacer()
+        
             
-            Text(cipherVM.VigenereCipher(str: "sswwc hzfwo! 123", isEncrypt: false, key: "LOL"))
+            Text(cipherVM.XORCipher(str: "aGk=", isEncrypt: false, key: "Asgard"))
+            
+            Spacer()
 
         }
         .padding()

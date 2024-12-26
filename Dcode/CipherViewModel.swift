@@ -7,18 +7,28 @@
 
 import Foundation
 
+/// CipherViewModel handles the logic of Encryption and Decryption 
+
 class CipherViewModel: ObservableObject {
     
-    // function getASCIIVal takes a character as input and returns an Int which represents the ASCII value if the provided char has an ASCII value
-    private func getASCIIVal(_ char: Character) -> Int {
-        if let asciiVal = char.asciiValue {
+    // MARK: - Methods
+    
+    /// Provides an ASCII value if there exists such for the given character
+    /// - Parameters:
+    ///     - charOfString: a character that is part of the string
+    /// - Returns: an Int signifying the ASCII value of the char otherwise -1 if there is no ASCII
+    private func getASCIIVal(_ charOfString: Character) -> Int {
+        if let asciiVal = charOfString.asciiValue {
             return Int(asciiVal)
         }
         
         return -1
     }
     
-    // function getStringFromASCII takes an int as input and returns a String which or nil depending on whether or not the int given as input has an ascii value
+    /// Provides the String version of the given ASCII value if there exists such a string
+    /// - Parameters:
+    ///     - asciiVal: an Int that is supposed to signify an ASCII val
+    /// - Returns: an Optional String where it will return a String of a char if there exists an ASCII value for it otherwise nil if there is no possible conversion
     private func getStringFromASCII(_ asciiVal: Int) -> String? {
         if let uniASCII = UnicodeScalar(asciiVal) {
             return String(Character(uniASCII))
@@ -27,18 +37,31 @@ class CipherViewModel: ObservableObject {
         return nil
     }
     
-    // function isLetter takes a character as input and returns a Bool depending on if the character provided has an ASCII value which links to a letter in the alphabet
+    /// Determines whether or not the passed in char is a letter or not
+    /// - Parameters:
+    ///     - char: a character to evaluate
+    /// - Returns: A  Bool value to determine if the passed in character is a letter
     private func isLetter(_ char: Character) -> Bool {
         let val = self.getASCIIVal(char)
         
         return (65 <= val && val <= 90) || (97 <= val && val <= 122)
     }
     
+    /// Provides the starting point in ASCII value depending on whether its lowercase or uppercase
+    /// - Parameters:
+    ///     - char: a character that will determine the start point
+    /// - Returns: An int that determines the start point in ASCII value
     private func determineLowerOrUpper(_ char: Character) -> Int {
         return char.isUppercase ? 65 : 97
     }
     
-    // function CaeserCipher takes a String, a Bool, an Int and returns a String with either an encoded version or decoded depending on the Bool, the String that is input is either encoded or decoded and it is either encoded or decoded depending on the shift which is the input Int
+    /// Applies the Caeser Cipher on a provided string
+    /// The Function will shift by the provided shift and it will whether encode or decode depending on isEncrypt. The output string is dependant on the input string
+    /// - Parameters:
+    ///     - str: A String that will be encrypted or decrypted
+    ///     - isEncrypt: A Bool that handles if it is an encryption or not, Encryption(true)/Decryption(false)
+    ///     - shift: An Int that handles how much to shift the letters by
+    /// - Returns: a new String which is either encoded or decoded by the Caeser Cipher
     func CaesarCipher(str: String, isEncrypt: Bool, shift: Int) -> String {
         var stringResult = ""
         
@@ -52,7 +75,7 @@ class CipherViewModel: ObservableObject {
                 let charChangedPosition = (((ascii - mainStart + shiftFactor) % 26 + 26) % 26) + mainStart
                 
                 if let appendToString = self.getStringFromASCII(charChangedPosition) {
-                    stringResult += appendToString
+                    stringResult.append(appendToString)
                 } else {
                     continue
                 }
@@ -64,7 +87,12 @@ class CipherViewModel: ObservableObject {
         return stringResult
     }
     
-    // func AtbashCipher takes a String as input and returns another string, since it is 1:1, encoding or decoding is irrelevent. Atbash Cipher maps each char to it's inverse indexed char. Ex. A->Z and Z->A
+    
+    /// Applies the Atbash cipher on a provided string
+    /// A Function that will map each letter in the alphabet to it's inverse indexed letter; A->Z and Z->A
+    /// - Parameters:
+    ///     - str: A String that will be encrypted or decrypted
+    /// - Returns: a new String which is either encoded or decoded by the Atbash Cipher
     func AtbashCipher(str: String) -> String {
         var stringResult = ""
         
@@ -77,7 +105,7 @@ class CipherViewModel: ObservableObject {
                 let charChangedPosition = (25 - (ascii - mainStart)) + mainStart
                 
                 if let appendToString = self.getStringFromASCII(charChangedPosition) {
-                    stringResult += appendToString
+                    stringResult.append(appendToString)
                 } else {
                     continue
                 }
@@ -89,40 +117,104 @@ class CipherViewModel: ObservableObject {
         return stringResult
     }
     
+    /// Applies the ROT13 Cipher on a provided string
+    /// A Function that will shift each character by a specfic string which also translates and rotates throgu
+    /// - Parameters:
+    ///     - str: A String that will be encrypted or decrypted
+    /// - Returns: a new String which is either encoded or decoded by the ROT13 Cipher
     func ROT13Cipher(str: String) -> String {
         return self.CaesarCipher(str: str, isEncrypt: true, shift: 13)
     }
     
+    /// Applies the Vigenere Cipher on a provided string
+    /// A Function that will take a provided string and for each character it will shift it by another character's position which is provided by the key.
+    /// The key will be transformed to match the length of the str such that a key of 'KEY' for str 'HELLO' would become 'KEYKE'
+    /// - Parameters:
+    ///     - str: A String that will be encrypted or decrypted
+    ///     - isEncrypt: A Bool that handles if it is an encryption or not, Encryption(true)/Decryption(false)
+    ///     - key: A String that will be used to shift each character of str
+    /// - Returns: a new String which is either encoded or decoded by the Vigenere Cipher
     func VigenereCipher(str: String, isEncrypt: Bool, key: String) -> String {
         var stringResult = ""
-        let keyLength = key.count
+        let keyArray = Array(key)
         var key_index = 0
         
         for s in str {
             if self.isLetter(s) {
                 let strStart = self.determineLowerOrUpper(s)
                 let strASCII = self.getASCIIVal(s)
-                let key_char = key[key.index(key.startIndex, offsetBy: key_index)]
+                let key_char = keyArray[key_index]
                 let keyStart = self.determineLowerOrUpper(key_char)
                 let keyASCII = self.getASCIIVal(key_char)
                 let keyNormalizedPos = keyASCII - keyStart
                 
                 let charChangedPosition = (((strASCII - strStart) + (isEncrypt ? keyNormalizedPos : -keyNormalizedPos) + 26) % 26) + strStart
-            
+                
                 if let appendToString = self.getStringFromASCII(charChangedPosition) {
                     stringResult.append(appendToString)
                 } else {
                     continue
                 }
                 
-                key_index = (key_index + 1) % keyLength
+                key_index = (key_index + 1) % keyArray.count
             } else {
                 stringResult.append(s)
             }
         }
         
-        return "The String: " + stringResult
+        return stringResult
     }
     
-    //TODO: implement morse code, xor, and encode64
+    /// Applies Base64 Cipher only for the use to make allowing for XOR to show non printable characters
+    /// A Function that will use built-in functions to use Base64 encoding and decoding to handle non printable characters
+    /// - Parameters:
+    ///     - str: A String that will be encrypted or decrypted
+    ///     - isEncrypt: A Bool that handles if it is an encryption or not, Encryption(true)/Decryption(false)
+    /// - Returns: a new String that will allow for non printable characters to be legible
+    private func Base64Cipher(str: String, isEncrypt: Bool) -> String {
+        if isEncrypt {
+            guard let data = str.data(using: .utf8) else {
+                return str
+            }
+            return data.base64EncodedString()
+        } else {
+            guard let data = Data(base64Encoded: str) else {
+                return str
+            }
+            return String(data: data, encoding: .utf8) ?? str
+        }
+    }
+    
+    /// Applies the XOR Cipher on a provided string
+    /// A Function that will take a provided string and for each character it will take the binary value and XOR gate it with another character's binary value.
+    /// The key will be transformed to match the length of the str such that a key of 'KEY' for str 'HELLO' would become 'KEYKE'
+    /// - Parameters:
+    ///     - str: A String that will be encrypted or decrypted
+    ///     - isEncrypt: A Bool that handles if it is an encryption or not, Encryption(true)/Decryption(false)
+    ///     - key: A String that will be used to XOR each character of str
+    /// - Returns: a new String which is either encoded or decoded by the XOR Cipher
+    func XORCipher(str: String, isEncrypt: Bool, key: String) -> String {
+        var stringResult = ""
+        let keyArray = Array(key)
+        var key_index = 0
+        
+        for s in str {
+            let strASCII = self.getASCIIVal(s)
+            let keyASCII = self.getASCIIVal(keyArray[key_index])
+            
+            // the new position of the transformed char will be the XOR of the binary value of the string's character ASCII with the key's one as well using the ^ to apply the XOR
+            let charChangedPosition = strASCII ^ keyASCII
+            print(charChangedPosition)
+            if let appendToString = self.getStringFromASCII(charChangedPosition) {
+                stringResult.append(appendToString)
+            } else {
+                continue
+            }
+            
+            key_index = (key_index + 1) % keyArray.count
+        }
+        
+        return Base64Cipher(str: str, isEncrypt: isEncrypt)
+    }
+    
 }
