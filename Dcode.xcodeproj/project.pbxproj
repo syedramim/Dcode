@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		98213DB72CFFD293002856F1 /* Dcode */ = {
+		981AFA932D1DD41700FC59A3 /* Dcode */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Dcode;
 			sourceTree = "<group>";
@@ -32,7 +32,7 @@
 		98213DAC2CFFD293002856F1 = {
 			isa = PBXGroup;
 			children = (
-				98213DB72CFFD293002856F1 /* Dcode */,
+				981AFA932D1DD41700FC59A3 /* Dcode */,
 				98213DB62CFFD293002856F1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,7 +61,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				98213DB72CFFD293002856F1 /* Dcode */,
+				981AFA932D1DD41700FC59A3 /* Dcode */,
 			);
 			name = Dcode;
 			packageProductDependencies = (

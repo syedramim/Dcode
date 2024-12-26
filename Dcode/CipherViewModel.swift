@@ -11,7 +11,44 @@ import Foundation
 
 class CipherViewModel: ObservableObject {
     
+    // MARK: - Properties
+    
+    /// Allows for the user to choose what cipher they want to use
+    @Published var selectedCipher: CipherType = .caesar { didSet { performCipher() } }
+    
+    @Published var userInput: String = "" { didSet { performCipher() } }
+    @Published var isEncrypt: Bool = true { didSet { performCipher() } }
+    @Published var shift: Int = 13 { didSet { performCipher() } }
+    @Published var key: String = "KEY" { didSet { performCipher() } }
+    @Published var output: String = "" 
+    
+    /// Initializes the the CipherViewModel with the necessary parameters for each Cipher Type
+    /// - Parameters:
+    ///     - selectedCipher: is a CipherType that allows for switching between Ciphers
+    ///     - userInput: a String that takes the userInput for the str to be encoded or decoded
+    ///     - isEncrypt: a Bool that is used to handle whether or not to encrypt or decrypt the str
+    ///     - shift: an Int that is used for specfic ciphers to shift str letters
+    ///     - key: a String that is used for specific ciphers to use the letters ASCII vals to shift str letters
+    init() {
+        performCipher()
+    }
+    
     // MARK: - Methods
+    
+    func performCipher() {
+        switch selectedCipher {
+        case .caesar:
+            output = CaesarCipher(str: userInput, isEncrypt: isEncrypt, shift: shift)
+        case .atbash:
+            output = AtbashCipher(str: userInput)
+        case .rot13:
+            output = ROT13Cipher(str: userInput)
+        case .vigenere:
+            output = VigenereCipher(str: userInput, isEncrypt: isEncrypt, key: key)
+        case .xor:
+            output = XORCipher(str: userInput, isEncrypt: isEncrypt, key: key)
+        }
+    }
     
     /// Provides an ASCII value if there exists such for the given character
     /// - Parameters:

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CipherType: String {
+enum CipherType: String, CaseIterable {
     case caesar = "Caesar Cipher"
     case atbash = "Atbash Cipher"
     case rot13 = "ROT13 Cipher"
