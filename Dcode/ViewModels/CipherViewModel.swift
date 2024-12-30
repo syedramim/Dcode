@@ -13,7 +13,7 @@ class CipherViewModel: ObservableObject {
     
     // MARK: - Properties
     
-    /// Allows for the user to choose what cipher they want to use
+    @Published var customCiphers: [Cipher] = []
     @Published var selectedCipher: CipherType = .caesar { didSet { performCipher() } }
     
     @Published var userInput: String = "" { didSet { performCipher() } }

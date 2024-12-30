@@ -9,7 +9,7 @@ import Foundation
 
 struct Cipher: Identifiable {
     let id = UUID()
-    var encrypted: String
-    var decrypted: String
     var cipher: CipherType
+    var shift: Int?
+    var key: String?
 }

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct CipherView: View {
-    @State private var isSheetPresented = false
     @StateObject private var cipherVM = CipherViewModel()
-    
+    @State private var isSheetPresented = false
+    @State private var isCustomCipherPresented = false
     
     var body: some View {
         NavigationStack {
@@ -28,10 +28,7 @@ struct CipherView: View {
                 .font(.largeTitle)
                 .multilineTextAlignment(.center)
                 .lineLimit(1)
-                
-                
-                Spacer()
-                
+        
                 Button {
                     cipherVM.isEncrypt.toggle()
                 } label: {
@@ -64,16 +61,34 @@ struct CipherView: View {
                         Text(cipher.rawValue)
                     }
                 }
-                .pickerStyle(.navigationLink)
+                .pickerStyle(.wheel)
+                
+                Spacer()
+                
+                Button {
+                    isSheetPresented.toggle()
+                } label: {
+                    Text("Change Parameters")
+                }
+
                 
             }
-            .onChange(of: cipherVM.selectedCipher) {
-                isSheetPresented = true
-            }
-            .sheet(isPresented: $isSheetPresented) {
-                CipherDetailView(cipherType: cipherVM.selectedCipher)
-            }
             .padding()
+            .navigationTitle("Dcode")
+            .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $isSheetPresented) {
+                CipherDetailView(cipherVM: cipherVM)
+            }
+            .fullScreenCover(isPresented: $isCustomCipherPresented) {
+                CreateCipherView(cipherVM: cipherVM)
+            }
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Create Cipher") {
+                        isCustomCipherPresented = true
+                    }
+                }
+            }
         }
     }
 }

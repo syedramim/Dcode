@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct CipherDetailView: View {
-    @ObservedObject private var cipherVM = CipherViewModel()
-    @State var cipherType: CipherType
+    @ObservedObject var cipherVM: CipherViewModel
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack {
@@ -55,7 +55,19 @@ struct CipherDetailView: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(1)
                     
+                    Spacer()
+                    
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Save Parameters")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
                 }
+                
+                
+
             }
             .navigationTitle("Parameters")
             .navigationBarTitleDisplayMode(.inline)
@@ -64,5 +76,5 @@ struct CipherDetailView: View {
 }
 
 #Preview {
-    CipherDetailView(cipherType: .caesar)
+    CipherDetailView(cipherVM: CipherViewModel())
 }
