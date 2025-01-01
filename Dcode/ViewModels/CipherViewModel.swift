@@ -241,7 +241,6 @@ class CipherViewModel: ObservableObject {
             
             // the new position of the transformed char will be the XOR of the binary value of the string's character ASCII with the key's one as well using the ^ to apply the XOR
             let charChangedPosition = strASCII ^ keyASCII
-            print(charChangedPosition)
             if let appendToString = self.getStringFromASCII(charChangedPosition) {
                 stringResult.append(appendToString)
             } else {
@@ -252,6 +251,13 @@ class CipherViewModel: ObservableObject {
         }
         
         return Base64Cipher(str: str, isEncrypt: isEncrypt)
+    }
+    
+    /// Adds a new Custom Cipher into the Custom Cipher Array
+    /// - Parameters:
+    ///     - cipher: An array filled with ciphers in a specfic order to handle however the user wants their custom cipher to be order using specific chosen parameters
+    func addCustomCipher(cipher: Cipher) {
+        self.customCiphers.append(cipher)
     }
     
 }

@@ -18,49 +18,23 @@ struct CipherDetailView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    Group {
-                        TextField("Current String: \(cipherVM.userInput)", text: $cipherVM.userInput)
-                        Divider()
-                            .frame(minHeight: 5)
-                            .background(Color.gray)
-                    }
-                    .frame(width: 350)
-                    .padding(2)
-                    .font(.largeTitle)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(1)
                     
-                    Group {
-                        TextField("Current Shift Value: \(cipherVM.shift)", value: $cipherVM.shift, formatter: NumberFormatter())
-                            .keyboardType(.numberPad)
-                        Divider()
-                            .frame(minHeight: 5)
-                            .background(Color.gray)
-                    }
-                    .frame(width: 350)
-                    .padding(2)
-                    .font(.largeTitle)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(1)
-
-                    Group {
-                        TextField("Current String: \(cipherVM.key)", text: $cipherVM.key)
-                        Divider()
-                            .frame(minHeight: 5)
-                            .background(Color.gray)
-                    }
-                    .frame(width: 350)
-                    .padding(2)
-                    .font(.largeTitle)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(1)
-                    
-                    Spacer()
+                    Parameters.handleParams(
+                        cipher: cipherVM.selectedCipher,
+                        shift: Binding(
+                            get: {cipherVM.shift},
+                            set: {cipherVM.shift = $0 ?? 0}
+                        ),
+                        key: Binding(
+                            get: {cipherVM.key},
+                            set: {cipherVM.key = $0 ?? "KEY"}
+                        )
+                    )
                     
                     Button {
                         dismiss()
                     } label: {
-                        Text("Save Parameters")
+                        Text("Save Parameter")
                     }
                     .buttonStyle(.borderedProminent)
                     

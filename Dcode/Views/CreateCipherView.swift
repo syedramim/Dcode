@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreateCipherView: View {
     @ObservedObject var cipherVM: CipherViewModel
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView {
@@ -20,14 +21,10 @@ struct CreateCipherView: View {
                 VStack {
                     ScrollView {
                         LazyVStack {
-                            ForEach(cipherVM.customCiphers) { layer in
+                            ForEach(cipherVM.customCiphers.indices, id: \.self) { index in
                                 CustomCipherWidget(cipher: Binding(
-                                    get: { layer },
-                                    set: { cipher in
-                                        if let index = cipherVM.customCiphers.firstIndex(where: { $0.id == layer.id }) {
-                                            cipherVM.customCiphers[index] = cipher
-                                        }
-                                    }
+                                    get: { cipherVM.customCiphers[index] },
+                                    set: { cipherVM.customCiphers[index] = $0}
                                 ))
                             }
                         }
@@ -38,7 +35,7 @@ struct CreateCipherView: View {
                     
                     Button {
                         let newCipher = Cipher(cipher: .caesar, shift: 13, key: "key")
-                        cipherVM.customCiphers.append(newCipher)
+                        cipherVM.addCustomCipher(cipher: newCipher)
                     } label: {
                         Image(systemName: "plus.circle")
                             .resizable()
@@ -49,7 +46,17 @@ struct CreateCipherView: View {
                 
             }
             .navigationTitle("Custom Cipher")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Save Cipher")
+                    }
+
+                }
+            }
         }
     }
 }
