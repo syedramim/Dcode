@@ -10,8 +10,6 @@ This project showcases several classical and modern cipher implementations using
 3. [Installation](#installation)
 4. [Usage](#usage)
 5. [Project Structure](#project-structure)
-6. [Customization](#customization)
-7. [Acknowledgments](#acknowledgments)
 
 ---
 
