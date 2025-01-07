@@ -12,8 +12,6 @@ import Foundation
 class CipherViewModel: ObservableObject {
     
     // MARK: - Properties
-    
-    @Published var customCiphers: [Cipher] = []
     @Published var selectedCipher: CipherType = .caesar { didSet { performCipher() } }
     
     @Published var userInput: String = "" { didSet { performCipher() } }
@@ -53,13 +51,13 @@ class CipherViewModel: ObservableObject {
     /// Provides an ASCII value if there exists such for the given character
     /// - Parameters:
     ///     - charOfString: a character that is part of the string
-    /// - Returns: an Int signifying the ASCII value of the char otherwise -1 if there is no ASCII
+    /// - Returns: an Int signifying the ASCII value of the char otherwise 0 if there is no ASCII
     private func getASCIIVal(_ charOfString: Character) -> Int {
         if let asciiVal = charOfString.asciiValue {
             return Int(asciiVal)
         }
         
-        return -1
+        return 0
     }
     
     /// Provides the String version of the given ASCII value if there exists such a string
@@ -172,6 +170,8 @@ class CipherViewModel: ObservableObject {
     ///     - key: A String that will be used to shift each character of str
     /// - Returns: a new String which is either encoded or decoded by the Vigenere Cipher
     func VigenereCipher(str: String, isEncrypt: Bool, key: String) -> String {
+        guard !key.isEmpty else {return str}
+        
         var stringResult = ""
         let keyArray = Array(key)
         var key_index = 0
@@ -231,13 +231,16 @@ class CipherViewModel: ObservableObject {
     ///     - key: A String that will be used to XOR each character of str
     /// - Returns: a new String which is either encoded or decoded by the XOR Cipher
     func XORCipher(str: String, isEncrypt: Bool, key: String) -> String {
+        guard !key.isEmpty else {return str}
+        
         var stringResult = ""
         let keyArray = Array(key)
         var key_index = 0
         
         for s in str {
             let strASCII = self.getASCIIVal(s)
-            let keyASCII = self.getASCIIVal(keyArray[key_index])
+            let keyChar = keyArray[key_index]
+            let keyASCII = self.getASCIIVal(keyChar)
             
             // the new position of the transformed char will be the XOR of the binary value of the string's character ASCII with the key's one as well using the ^ to apply the XOR
             let charChangedPosition = strASCII ^ keyASCII
@@ -252,12 +255,5 @@ class CipherViewModel: ObservableObject {
         
         return Base64Cipher(str: str, isEncrypt: isEncrypt)
     }
-    
-    /// Adds a new Custom Cipher into the Custom Cipher Array
-    /// - Parameters:
-    ///     - cipher: An array filled with ciphers in a specfic order to handle however the user wants their custom cipher to be order using specific chosen parameters
-    func addCustomCipher(cipher: Cipher) {
-        self.customCiphers.append(cipher)
-    }
-    
+
 }

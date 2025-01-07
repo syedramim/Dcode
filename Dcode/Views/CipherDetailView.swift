@@ -14,34 +14,41 @@ struct CipherDetailView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(colors: [.gray, .blue], startPoint: .bottom, endPoint: .top)
+                LinearGradient(colors: [.white, .gray.opacity(0.2)], startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
                 
-                VStack {
-                    
+                VStack(spacing: 30) {
+                    Spacer()
                     Parameters.handleParams(
                         cipher: cipherVM.selectedCipher,
                         shift: Binding(
-                            get: {cipherVM.shift},
-                            set: {cipherVM.shift = $0 ?? 0}
+                            get: { cipherVM.shift },
+                            set: { cipherVM.shift = $0 ?? 0 }
                         ),
                         key: Binding(
-                            get: {cipherVM.key},
-                            set: {cipherVM.key = $0 ?? "KEY"}
+                            get: { cipherVM.key },
+                            set: { cipherVM.key = $0 ?? "KEY" }
                         )
                     )
+                    .padding()
+                    .background(Color.white.opacity(0.8))
+                    .cornerRadius(10)
+                    .shadow(radius: 2)
                     
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Save Parameter")
+                    Button(action: { dismiss() }) {
+                        Text("Save Parameters")
+                            .font(.headline)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue.opacity(0.8))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .padding(.horizontal, 40)
                     
+                    Spacer()
                 }
-                
-                
-
+                .padding()
             }
             .navigationTitle("Parameters")
             .navigationBarTitleDisplayMode(.inline)
@@ -52,3 +59,4 @@ struct CipherDetailView: View {
 #Preview {
     CipherDetailView(cipherVM: CipherViewModel())
 }
+

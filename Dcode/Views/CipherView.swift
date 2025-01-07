@@ -10,84 +10,125 @@ import SwiftUI
 struct CipherView: View {
     @StateObject private var cipherVM = CipherViewModel()
     @State private var isSheetPresented = false
-    @State private var isCustomCipherPresented = false
+    @State private var showCopiedMessage = false
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Spacer()
+            ZStack {
+                LinearGradient(colors: [.white, .gray.opacity(0.2)], startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
                 
-                Group {
-                    TextField(cipherVM.isEncrypt ? "Encrypt: " : "Decrypt: ", text: $cipherVM.userInput)
-                    Divider()
-                        .frame(minHeight: 5)
-                        .background(Color.gray)
-                }
-                .frame(width: 350)
-                .padding(2)
-                .font(.largeTitle)
-                .multilineTextAlignment(.center)
-                .lineLimit(1)
-        
-                Button {
-                    cipherVM.isEncrypt.toggle()
-                } label: {
-                    Image(systemName: cipherVM.isEncrypt ? "lock.open" : "lock")
-                        .resizable()
-                        .frame(width: 75, height: 100)
-                        .tint(.black)
-                }
-                
-                
-                Spacer()
-                
-                
-                Group {
-                    Text(cipherVM.output)
+                VStack(spacing: 20) {
+                    Spacer()
+                    
+                    Group {
+                        TextField(cipherVM.isEncrypt ? "Enter text to Encrypt" : "Enter text to Decrypt", text: $cipherVM.userInput)
+                            .padding()
+                            .background(Color.white.opacity(0.8))
+                            .cornerRadius(10)
+                            .shadow(radius: 2)
+                            .minimumScaleFactor(0.5)
+                            
+                    }
+                    .frame(width: 350)
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
                     
                     Button {
-                        cipherVM.userInput = cipherVM.output
                         cipherVM.isEncrypt.toggle()
                     } label: {
-                        Image(systemName: "arrow.up.arrow.down.circle")
+                        Image(systemName: cipherVM.isEncrypt ? "lock.fill" : "lock.open.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.blue)
                     }
+                    .padding()
                     
-                }
-                
-                Spacer()
-                
-                Picker("Ciphers", selection: $cipherVM.selectedCipher) {
-                    ForEach(CipherType.allCases, id: \.self) { cipher in
-                        Text(cipher.rawValue)
+                    Spacer()
+                    
+                    Group {
+                        Text(cipherVM.output)
+                            .padding()
+                            .frame(maxWidth: .infinity, maxHeight: 100)
+                            .background(Color.white.opacity(0.8))
+                            .cornerRadius(10)
+                            .shadow(radius: 2)
+                            .minimumScaleFactor(0.5)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .onTapGesture {
+                                UIPasteboard.general.string = cipherVM.output
+                                
+                                withAnimation {
+                                    showCopiedMessage = true
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                    withAnimation {
+                                        showCopiedMessage = false
+                                    }
+                                }
+                            }
+                        
+                        Button {
+                            cipherVM.userInput = cipherVM.output
+                            cipherVM.isEncrypt.toggle()
+                        } label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.blue)
+                        }
                     }
+                    .padding(.horizontal, 20)
+                    
+                    Spacer()
+                    
+                    Picker("Ciphers", selection: $cipherVM.selectedCipher) {
+                        ForEach(CipherType.allCases, id: \.self) { cipher in
+                            Text(cipher.rawValue)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .background(Color.white.opacity(0.8))
+                    .cornerRadius(10)
+                    .shadow(radius: 2)
+                    .frame(height: 150)
+                    
+                    Spacer()
+                    
+                    Button {
+                        isSheetPresented.toggle()
+                    } label: {
+                        Text("Change Parameters")
+                            .font(.headline)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue.opacity(0.8))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal, 40)
+                    
+                    Spacer()
                 }
-                .pickerStyle(.wheel)
+                .padding()
                 
-                Spacer()
-                
-                Button {
-                    isSheetPresented.toggle()
-                } label: {
-                    Text("Change Parameters")
+                if showCopiedMessage {
+                    Text("Copied!")
+                        .font(.headline)
+                        .padding()
+                        .background(Color.black.opacity(0.7))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .transition(.opacity)
+                        .zIndex(1)
                 }
-
-                
             }
-            .padding()
             .navigationTitle("Dcode")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $isSheetPresented) {
                 CipherDetailView(cipherVM: cipherVM)
-            }
-            .fullScreenCover(isPresented: $isCustomCipherPresented) {
-                CreateCipherView(cipherVM: cipherVM)
-            }
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Create Cipher") {
-                        isCustomCipherPresented = true
-                    }
-                }
             }
         }
     }
@@ -96,3 +137,5 @@ struct CipherView: View {
 #Preview {
     CipherView()
 }
+
+
