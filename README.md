@@ -21,7 +21,6 @@ This project showcases several classical and modern cipher implementations using
 ## Key Features
 - **Multiple Ciphers**: Caesar, Atbash, ROT13, Vigenère, and XOR.
 - **Parameter Configuration**: Easily change shift values or keys through a dedicated parameter view.
-- **Custom Cipher Stack**: Create and manage a stack of custom ciphers in the app.
 - **Modular Architecture**: SwiftUI views are separated into logical components for better maintainability.
 - **ObservableObject**: `CipherViewModel` uses `@Published` properties to auto-update the UI.
 
@@ -39,7 +38,6 @@ This project showcases several classical and modern cipher implementations using
 2. **Enter Text**: Type the text you want to encrypt or decrypt in the text field.
 3. **Toggle Mode**: Press the lock icon to switch between encryption and decryption.
 4. **Edit Parameters**: Choose “Change Parameters” to adjust shift values or keys. For ciphers that do not require parameters, no input is necessary.
-5. **Custom Ciphers**: Tap “Create Cipher” to stack or remove additional ciphers with unique parameters.
 
 ---
 
@@ -52,8 +50,6 @@ This project showcases several classical and modern cipher implementations using
 - **Views**  
   - `CipherView`: Main screen for user input, output, and cipher selection.
   - `CipherDetailView`: Allows configuration of cipher parameters.
-  - `CreateCipherView`: Lets users create custom cipher stacks.
-  - `CustomCipherWidget`: Displays a single custom cipher’s parameters and type.
 - **Utilities**  
   - `Parameters`: Utility for handling text field inputs for cipher parameters.
 
