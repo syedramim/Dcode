@@ -1,6 +1,6 @@
 # Dcode – A SwiftUI Encryption & Decryption Tool
 
-This project showcases several classical and modern cipher implementations using SwiftUI. It demonstrates how to encrypt and decrypt text using Caesar, Atbash, ROT13, Vigenère, and XOR ciphers, along with a customizable feature for creating your own cipher configurations.
+This project showcases several classical and modern cipher implementations using SwiftUI. It demonstrates how to encrypt and decrypt text using Caesar, Atbash, ROT13, Vigenère, and XOR ciphers.
 
 ---
 
