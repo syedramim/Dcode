@@ -6,15 +6,33 @@ This project showcases several classical and modern cipher implementations using
 
 ## Table of Contents
 1. [Overview](#overview)
-2. [Key Features](#key-features)
-3. [Installation](#installation)
-4. [Usage](#usage)
-5. [Project Structure](#project-structure)
+2. [Demo](#demo)
+3. [Screenshots](#screenshots)
+4. [Key Features](#key-features)
+5. [Installation](#installation)
+6. [Usage](#usage)
+7. [Project Structure](#project-structure)
 
 ---
 
 ## Overview
 **Dcode** leverages SwiftUI’s declarative approach to build a clean user interface for exploring various encryption methods. Each cipher is defined in its own function within `CipherViewModel`, and the UI allows users to switch between ciphers, toggle encryption or decryption, and configure parameters like shift values or keys.
+
+---
+
+## Demo
+
+<img src="demofiles/DcodeDemo.gif" height="500">
+
+--- 
+
+## Screenshots
+
+<p float="left">
+  <img src="demofiles/CipherView_b.png" height="400">
+  <img src="demofiles/CipherView.png" height="400">
+  <img src="demofiles/DetailView.png" height="400">
+</p>
 
 ---
 
